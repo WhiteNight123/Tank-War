@@ -1,2 +1,2 @@
-# Tank-Game
-某高校Swing实训项目
+# Tank-War
+一款基于Swing的实训项目
