@@ -91,7 +91,7 @@ public class Game extends JFrame {
 
     public JButton getBackMainButton() {
         JButton backMain = new JButton("返回主菜单");
-        backMain.setBounds(480, 530, 220, 60);
+        backMain.setBounds(480, 535, 220, 60);
         backMain.setFont(new Font("微软雅黑", Font.PLAIN, 36));
         backMain.setFocusPainted(false);
         backMain.setForeground(Color.RED);
