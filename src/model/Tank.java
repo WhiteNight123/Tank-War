@@ -4,28 +4,28 @@ import java.awt.*;
 import java.util.Random;
 
 public class Tank implements AttackCallable {
+    private final int tankType;
+    private final Random random;
+    private final long[] propTime;
     private int x;
     private int y;
     private int dir;
     private int hp;
     private int bulletType;
-    private int tankType;
     private boolean isAlive;
     private int speed;
-    private MyPanel father;
-    private Random random;
+    private MyPanel myPanel;
     private long lastFireTime;
     private String[] img;
-    private long[] propTime;
 
     // 传入的是 敌人 、 玩家
-    public Tank(int tankType, MyPanel father, int x, int y) {
+    public Tank(int tankType, MyPanel myPanel, int x, int y) {
         this.setX(x);
         this.setY(y);
         this.hp = Const.MAX_HP;
         this.isAlive = true;
         this.tankType = tankType;
-        this.setFather(father);
+        this.setMyPanel(myPanel);
         this.random = new Random();
         this.setLastFireTime(System.currentTimeMillis());
         propTime = new long[]{0, 0, 0};
@@ -88,7 +88,7 @@ public class Tank implements AttackCallable {
             }
         }
 
-        this.getFather().getBullets().add(new Bullet(x, y, this.getDir(), this.getBulletType(), this.getTankType(), this.getFather()));
+        this.getMyPanel().getBullets().add(new Bullet(x, y, this.getDir(), this.getBulletType(), this.getTankType(), this.getMyPanel()));
 //        System.out.println("添加炮弹成功, 横坐标："+this.getX()+"纵坐标："+this.getY()+",还有"+this.getFather().getBullets().size()+"颗炮弹");
     }
 
@@ -97,7 +97,7 @@ public class Tank implements AttackCallable {
         int y;
         Graphics2D g = (Graphics2D) g1;
         String path = this.getImg()[this.getDir() - 1];
-        g.drawImage(Toolkit.getDefaultToolkit().getImage(path), this.getX(), this.getY(), Const.TANK_WIDTH, Const.TANK_WIDTH, this.getFather());
+        g.drawImage(Toolkit.getDefaultToolkit().getImage(path), this.getX(), this.getY(), Const.TANK_WIDTH, Const.TANK_WIDTH, this.getMyPanel());
         int hp = this.getHp();
         g.setColor(Color.white);
         g.setStroke(new BasicStroke(3));
@@ -140,6 +140,10 @@ public class Tank implements AttackCallable {
         return dir;
     }
 
+    public void setDir(int dir) {
+        this.dir = dir;
+    }
+
     public long getLastFireTime() {
         return lastFireTime;
     }
@@ -148,20 +152,8 @@ public class Tank implements AttackCallable {
         this.lastFireTime = lastFireTime;
     }
 
-    public void setDir(int dir) {
-        this.dir = dir;
-    }
-
     public int getHp() {
         return hp;
-    }
-
-    public MyPanel getFather() {
-        return father;
-    }
-
-    public void setFather(MyPanel father) {
-        this.father = father;
     }
 
     public void setHp(int hp) {
@@ -171,6 +163,14 @@ public class Tank implements AttackCallable {
         } else {
             this.hp = hp;
         }
+    }
+
+    public MyPanel getMyPanel() {
+        return myPanel;
+    }
+
+    public void setMyPanel(MyPanel myPanel) {
+        this.myPanel = myPanel;
     }
 
     public int getBulletType() {
@@ -185,24 +185,16 @@ public class Tank implements AttackCallable {
         return tankType;
     }
 
-    public void setTankType(int tankType) {
-        this.tankType = tankType;
-    }
-
     public boolean isAlive() {
         return isAlive;
     }
 
-    public Random getRandom() {
-        return random;
-    }
-
-    public void setRandom(Random random) {
-        this.random = random;
-    }
-
     public void setAlive(boolean alive) {
         isAlive = alive;
+    }
+
+    public Random getRandom() {
+        return random;
     }
 
     public String[] getImg() {

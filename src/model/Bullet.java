@@ -4,13 +4,13 @@ import java.awt.*;
 import java.util.Random;
 
 public class Bullet {
+    private final int dir;
+    private final int bulletType;
+    private final int belongTo;   // 谁发出的， 敌方还是玩家
     private int x;
     private int y;
     private int damage;
-    private int dir;
-    private int bulletType;
     private int speed;  // 射速
-    private int belongTo;   // 谁发出的， 敌方还是玩家
     private boolean alive; // 是否存在， 如果是 false则播放爆炸图片
     private MyPanel myPanel;
 
@@ -145,40 +145,20 @@ public class Bullet {
         return damage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-
     public int getDir() {
         return dir;
-    }
-
-    public void setDir(int dir) {
-        this.dir = dir;
     }
 
     public int getBulletType() {
         return bulletType;
     }
 
-    public void setBulletType(int bulletType) {
-        this.bulletType = bulletType;
-    }
-
     public int getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
     public int getBelongTo() {
         return belongTo;
-    }
-
-    public void setBelongTo(int belongTo) {
-        this.belongTo = belongTo;
     }
 
     public boolean isAlive() {

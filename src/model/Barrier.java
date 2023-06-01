@@ -7,27 +7,25 @@ import java.io.IOException;
 import java.util.Vector;
 
 public class Barrier {
-    private int type;
-    private int x;
-    private int y;
-    private int width;
+    private final int type;
+    private final int x;
+    private final int y;
+    private final int width;
     private boolean alive;
-    private MyPanel myPanel;
 
-    public Barrier(int type, int x, int y, int width, MyPanel myPanel) {
+    public Barrier(int type, int x, int y, int width) {
         this.type = type;
         this.x = x;
         this.y = y;
         this.width = width;
         this.alive = true;
-        this.myPanel = myPanel;
     }
 
-    public static Vector<Barrier> readMap(int level, MyPanel myPanel) {
+    public static Vector<Barrier> readMap(int level) {
         // 从txt读取地图
-        String path = "map/map" + level + ".txt";
+        String path = "src/res/map/map" + level + ".txt";
         Vector<Barrier> barriers = new Vector<>();
-        barriers.add(new Barrier(Const.HOME, 23 * Const.WIDTH, 37 * Const.WIDTH, Const.TANK_WIDTH, myPanel));
+        barriers.add(new Barrier(Const.HOME, 23 * Const.WIDTH, 37 * Const.WIDTH, Const.TANK_WIDTH));
         BufferedReader reader;
         int row = 0;
         String line;
@@ -38,11 +36,11 @@ public class Barrier {
                     if (line.charAt(j) > '0' && line.charAt(j) < '9') {
                         switch (line.charAt(j)) {
                             case '2' ->
-                                    barriers.add(new Barrier(Const.GRASS, j * Const.WIDTH, row * Const.WIDTH, Const.WIDTH, myPanel));
+                                    barriers.add(new Barrier(Const.GRASS, j * Const.WIDTH, row * Const.WIDTH, Const.WIDTH));
                             case '3' ->
-                                    barriers.add(new Barrier(Const.BRICK, j * Const.WIDTH, row * Const.WIDTH, Const.WIDTH, myPanel));
+                                    barriers.add(new Barrier(Const.BRICK, j * Const.WIDTH, row * Const.WIDTH, Const.WIDTH));
                             case '4' ->
-                                    barriers.add(new Barrier(Const.STEEL, j * Const.WIDTH, row * Const.WIDTH, Const.WIDTH, myPanel));
+                                    barriers.add(new Barrier(Const.STEEL, j * Const.WIDTH, row * Const.WIDTH, Const.WIDTH));
                             default -> {
                             }
                         }
@@ -73,45 +71,24 @@ public class Barrier {
         return type;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
     public int getX() {
         return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
     }
 
     public int getY() {
         return y;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
 
     public int getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
 
     public boolean isAlive() {
         return alive;
     }
 
-    public MyPanel getMyPanel() {
-        return myPanel;
-    }
-
-    public void setMyPanel(MyPanel myPanel) {
-        this.myPanel = myPanel;
-    }
 
     public void setAlive(boolean alive) {
         this.alive = alive;

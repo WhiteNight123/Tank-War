@@ -3,18 +3,18 @@ package model;
 import java.awt.*;
 
 public class Explosion {
+    private final int width;
+    private final String[] img = new String[]{"src/res/drawable/tank_explosion", "src/res/drawable/bullet_explosion"};
+    private final int total;
     private int x;
     private int y;
     private int current;
     private int type;   // 判断坦克还是子弹
-    private int width;
-    private String[] img = new String[]{"src/res/drawable/tank_explosion", "src/res/drawable/bullet_explosion"};
-    private MyPanel father;
-    private int total;
+    private MyPanel myPanel;
     private boolean isAlive;
     private long lastExplosionTime;
 
-    public Explosion(int x, int y, int type, MyPanel father) {
+    public Explosion(int x, int y, int type, MyPanel myPanel) {
         this.setX(x);
         this.setY(y);
         this.setType(type);
@@ -26,7 +26,7 @@ public class Explosion {
             width = Const.WIDTH;
             total = 3;
         }
-        this.setFather(father);
+        this.setMyPanel(myPanel);
         this.setAlive(true);
         this.setLastExplosionTime(System.currentTimeMillis());
     }
@@ -34,7 +34,7 @@ public class Explosion {
     public void draw(Graphics g) {
         long t = System.currentTimeMillis();
         String path = this.getImg()[this.getType()] + this.getCurrent() + ".gif";
-        g.drawImage(Toolkit.getDefaultToolkit().getImage(path), this.getX(), this.getY(), this.getWidth(), this.getWidth(), this.getFather());
+        g.drawImage(Toolkit.getDefaultToolkit().getImage(path), this.getX(), this.getY(), this.getWidth(), this.getWidth(), this.getMyPanel());
         if (t - this.getLastExplosionTime() >= 200) {
             current++;
             this.setLastExplosionTime(t);
@@ -62,10 +62,6 @@ public class Explosion {
         return current;
     }
 
-    public void setCurrent(int current) {
-        this.current = current;
-    }
-
     public int getType() {
         return type;
     }
@@ -78,32 +74,16 @@ public class Explosion {
         return img;
     }
 
-    public void setImg(String[] img) {
-        this.img = img;
-    }
-
     public int getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
+    public MyPanel getMyPanel() {
+        return myPanel;
     }
 
-    public MyPanel getFather() {
-        return father;
-    }
-
-    public void setFather(MyPanel father) {
-        this.father = father;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
+    public void setMyPanel(MyPanel myPanel) {
+        this.myPanel = myPanel;
     }
 
     public boolean isAlive() {

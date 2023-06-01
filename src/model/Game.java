@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Game extends JFrame {
-    private JPanel panel;
     private int curLevel;
 
     public Game() {
@@ -17,8 +16,13 @@ public class Game extends JFrame {
         setResizable(false);
     }
 
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.welcome();
+    }
+
     public void welcome() {
-        String bg = "src/res/drawable/welcome.png";
+        String bg = "src/res/drawable/game_welcome.png";
         JPanel wel = new Welcome(bg);
         JButton beginGame = new JButton("开始游戏");
         beginGame.setBounds(500, 460, 180, 60);
@@ -27,18 +31,17 @@ public class Game extends JFrame {
         beginGame.setForeground(Color.RED);
         beginGame.setContentAreaFilled(false);
         beginGame.addActionListener(actionEvent -> {
-            gameOver();
-            //playGame();
+            playGame();
         });
         wel.add(beginGame);
         wel.add(this.getExitGameButton(0));
         this.setPanel(wel);
     }
 
-//    public void playGame() {
-//        this.setPanel(new MyPanel(this, this.curLevel));
-//        this.getContentPane().requestFocus();
-//    }
+    public void playGame() {
+        this.setPanel(new MyPanel(this, this.curLevel));
+        this.getContentPane().requestFocus();
+    }
 
     public void gameOver() {
         String bg = "src/res/drawable/game_over.png";
@@ -49,7 +52,7 @@ public class Game extends JFrame {
     }
 
     public void win() {
-        String bg = "src/res/drawable/win.png";
+        String bg = "src/res/drawable/game_win.png";
         JPanel win = new Welcome(bg);
         win.add(this.getBackMainButton());
         win.add(this.getExitGameButton(60));
@@ -57,7 +60,7 @@ public class Game extends JFrame {
     }
 
     public void passGame() {
-        String bg = "src/res/drawable/win.png";
+        String bg = "src/res/drawable/game_win.png";
         JPanel pass = new Welcome(bg);
         JButton nextLevel = new JButton("下一关");
         nextLevel.setBounds(516, 450, 150, 60);
@@ -67,14 +70,13 @@ public class Game extends JFrame {
         nextLevel.setContentAreaFilled(false);
         nextLevel.addActionListener(actionEvent -> {
             setCurLevel(getCurLevel() + 1);
-            //playGame();
+            playGame();
         });
         pass.add(nextLevel);
         pass.add(this.getExitGameButton(60));
         pass.add(this.getBackMainButton());
         this.setPanel(pass);
     }
-
 
     public JButton getExitGameButton(int distance) {
         JButton exitGame = new JButton("退出游戏");
@@ -83,8 +85,7 @@ public class Game extends JFrame {
         exitGame.setForeground(Color.RED);
         exitGame.setContentAreaFilled(false);
         exitGame.addActionListener(actionEvent -> {
-            passGame();
-            //System.exit(0);
+            System.exit(0);
         });
         return exitGame;
     }
@@ -101,7 +102,6 @@ public class Game extends JFrame {
     }
 
     public void setPanel(JPanel panel) {
-        this.panel = panel;
         panel.setLayout(null);
         this.setContentPane(panel);
         this.setVisible(true);
@@ -113,10 +113,5 @@ public class Game extends JFrame {
 
     public void setCurLevel(int curLevel) {
         this.curLevel = curLevel;
-    }
-
-    public static void main(String[] args) {
-        Game game = new Game();
-        game.welcome();
     }
 }

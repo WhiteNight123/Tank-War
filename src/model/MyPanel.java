@@ -8,21 +8,19 @@ import java.util.Random;
 import java.util.Vector;
 
 public class MyPanel extends JPanel {
-    private Vector<Tank> tanks;
-    private Vector<Bullet> bullets;
-    private Vector<Barrier> barriers;
-    private Vector<Explosion> explosions;
-    private Vector<Prop> props;
-    private Vector<Birth> births;
-    private int curLevel;
-    private Thread rePaintThread = null;
-    private Random random;
+    private final Vector<Tank> tanks;
+    private final Vector<Bullet> bullets;
+    private final Vector<Barrier> barriers;
+    private final Vector<Explosion> explosions;
+    private final Vector<Prop> props;
+    private final Vector<Birth> births;
+    private final int curLevel;
+    private final Random random;
+    private final Game game;
     private int curEnemyCnt;
     private int leftEnemy;
     private int scores;
     private long lastCanAddEneTime;
-    private Game game;
-    private final static String[] level = new String[]{"一", "二"};
 
     public MyPanel(Game game, int level) {
         this.game = game;
@@ -37,13 +35,13 @@ public class MyPanel extends JPanel {
         curLevel = level;
         curEnemyCnt = 2;
         this.setScores(0);
-        this.barriers = Barrier.readMap(curLevel, this);
+        this.barriers = Barrier.readMap(curLevel);
         tanks.add(new PlayerTank(Const.PLAYER, this, 17 * Const.WIDTH, 37 * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         this.leftEnemy = Const.Max_Enemy - this.getCurEnemyCnt();
         this.setLastCanAddEneTime(System.currentTimeMillis());
-        rePaintThread = new Thread() {
+        Thread rePaintThread = new Thread() {
             @Override
             public void run() {
                 while (true) {
@@ -62,12 +60,23 @@ public class MyPanel extends JPanel {
 
         // 面板添加监听
         this.addKeyListener(new KeyListener() {
-            boolean up = false, down = false, left = false, right = false;
+            boolean up = false, down = false, left = false, right = false, pause = false;
             boolean fire = false;
 
             @Override
             public void keyTyped(KeyEvent keyEvent) {
-
+                if (keyEvent.getKeyCode() == KeyEvent.VK_P) {
+                    pause = !pause;
+                    if (pause) {
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Thread.currentThread().interrupt();
+                    }
+                }
             }
 
             @Override
@@ -95,7 +104,6 @@ public class MyPanel extends JPanel {
             }
 
             public void setCurDir() {
-
                 PlayerTank player = (PlayerTank) tanks.get(0);
                 if (!fire) {
                     player.setFiring(false);
@@ -123,12 +131,11 @@ public class MyPanel extends JPanel {
         super.paintComponent(g1);
         // 画背景
         Graphics2D g = (Graphics2D) g1;
-        g.drawImage(Toolkit.getDefaultToolkit().getImage("pictures/map/gameBg.jpg"), 0, 0, Const.GAME_WIDTH, Const.GAME_HEIGHT, this);
-        g.drawImage(Toolkit.getDefaultToolkit().getImage("pictures/map/scorePanel.jpg"), Const.GAME_WIDTH, 0, 200, Const.GAME_HEIGHT, this);
+        g.drawImage(Toolkit.getDefaultToolkit().getImage("src/res/drawable/game_background.png"), 0, 0, Const.GAME_WIDTH, Const.GAME_HEIGHT, this);
+        g.drawImage(Toolkit.getDefaultToolkit().getImage("src/res/drawable/game_score_panel.png"), Const.GAME_WIDTH, 0, 200, Const.GAME_HEIGHT, this);
         g.setColor(Color.black);
         g.setStroke(new BasicStroke(3));
         g.drawLine(Const.GAME_WIDTH, 0, Const.GAME_WIDTH, Const.GAME_HEIGHT);
-        // 需要使用for int i 循环，不能使用 for each 循环
 
         // 画出生地
         for (int i = 0; i < births.size(); i++) {
@@ -157,7 +164,7 @@ public class MyPanel extends JPanel {
             }
 
             if (this.getTanks().get(0).isAlive() && this.getCurEnemyCnt() == 0 && this.getLeftEnemy() == 0) {
-                if (this.getCurLevel() < 4) {
+                if (this.getCurLevel() < 2) {
                     this.game.passGame();
                 } else {
                     this.game.win();
@@ -210,12 +217,12 @@ public class MyPanel extends JPanel {
         }
 
         // 写分数，写击杀，剩余
-        g.setFont(new Font("微软雅黑", Font.PLAIN, 28));
-        g.setColor(Color.black);
-        g.drawString(level[this.getCurLevel() - 1], Const.GAME_WIDTH + 85, 110);
-        g.drawString(String.valueOf(this.getScores()), Const.GAME_WIDTH + 100, 190);
-        g.drawString(String.valueOf(this.getLeftEnemy()), Const.GAME_WIDTH + 100, 280);
-        g.drawString(String.valueOf(Const.Max_Enemy - this.getLeftEnemy() - this.getCurEnemyCnt()), Const.GAME_WIDTH + 100, 360);
+        g.setFont(new Font("微软雅黑", Font.BOLD, 36));
+        g.setColor(Color.RED);
+        g.drawString(String.valueOf(this.getCurLevel()), Const.GAME_WIDTH + 88, 130);
+        g.drawString(String.valueOf(this.getScores()), Const.GAME_WIDTH + 105, 260);
+        g.drawString(String.valueOf(this.getLeftEnemy()), Const.GAME_WIDTH + 105, 335);
+        g.drawString(String.valueOf(Const.Max_Enemy - this.getLeftEnemy() - this.getCurEnemyCnt()), Const.GAME_WIDTH + 105, 405);
         this.addEnemyTank();
     }
 
@@ -229,21 +236,17 @@ public class MyPanel extends JPanel {
                 return;
             }
             switch (total) {
-                case 2:
+                case 2 -> {
                     if (this.getRandom().nextInt(2) == 0) {
                         x = Const.Enemy_x1;
                     } else {
                         x = Const.Enemy_x2;
                     }
-                    break;
-                case -1:
-                    x = Const.Enemy_x1;
-                    break;
-                case 1:
-                    x = Const.Enemy_x2;
-                    break;
-                default:
-                    break;
+                }
+                case -1 -> x = Const.Enemy_x1;
+                case 1 -> x = Const.Enemy_x2;
+                default -> {
+                }
             }
             x *= Const.WIDTH;
             y *= Const.WIDTH;
@@ -266,21 +269,19 @@ public class MyPanel extends JPanel {
         int b = 0;
         for (int i = 0; i < this.getTanks().size(); i++) {
             Tank tank = this.getTanks().get(i);
-            if (CollDete.isCollide(Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH, Const.TANK_WIDTH, tank.getX(), tank.getY(), Const.TANK_WIDTH)) {
+            if (Utils.isCollide(Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH, Const.TANK_WIDTH, tank.getX(), tank.getY(), Const.TANK_WIDTH)) {
                 a = 1;
             }
-
-            if (CollDete.isCollide(Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH, Const.TANK_WIDTH, tank.getX(), tank.getY(), Const.TANK_WIDTH)) {
+            if (Utils.isCollide(Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH, Const.TANK_WIDTH, tank.getX(), tank.getY(), Const.TANK_WIDTH)) {
                 b = 1;
             }
         }
 
-        for (int i = 0; i < this.births.size(); i++) {
-            Birth birth = this.births.get(i);
-            if (CollDete.isCollide(Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH, Const.TANK_WIDTH, birth.getX(), birth.getY(), Const.TANK_WIDTH)) {
+        for (Birth birth : this.births) {
+            if (Utils.isCollide(Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH, Const.TANK_WIDTH, birth.getX(), birth.getY(), Const.TANK_WIDTH)) {
                 a = 1;
             }
-            if (CollDete.isCollide(Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH, Const.TANK_WIDTH, birth.getX(), birth.getY(), Const.TANK_WIDTH)) {
+            if (Utils.isCollide(Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH, Const.TANK_WIDTH, birth.getX(), birth.getY(), Const.TANK_WIDTH)) {
                 b = 1;
             }
         }
@@ -300,75 +301,33 @@ public class MyPanel extends JPanel {
             this.getProps().add(new Prop(x, y, this.random.nextInt(4), this));
         }
     }
-//    void
 
-    /**
-     * get and set
-     *
-     * @return get
-     */
     public Vector<Barrier> getBarriers() {
         return barriers;
-    }
-
-    public void setBarriers(Vector<Barrier> barriers) {
-        this.barriers = barriers;
     }
 
     public int getCurLevel() {
         return curLevel;
     }
 
-    public void setCurLevel(int curLevel) {
-        this.curLevel = curLevel;
-    }
-
     public Vector<Bullet> getBullets() {
         return bullets;
-    }
-
-    public void setBullets(Vector<Bullet> bullets) {
-        this.bullets = bullets;
     }
 
     public Random getRandom() {
         return random;
     }
 
-    public void setRandom(Random random) {
-        this.random = random;
-    }
-
     public Vector<Tank> getTanks() {
         return tanks;
-    }
-
-    public void setTanks(Vector<Tank> tanks) {
-        this.tanks = tanks;
     }
 
     public Vector<Explosion> getExplosions() {
         return explosions;
     }
 
-    public void setExplosions(Vector<Explosion> explosions) {
-        this.explosions = explosions;
-    }
-
-    public Thread getRePaintThread() {
-        return rePaintThread;
-    }
-
-    public void setRePaintThread(Thread rePaintThread) {
-        this.rePaintThread = rePaintThread;
-    }
-
     public Vector<Prop> getProps() {
         return props;
-    }
-
-    public void setProps(Vector<Prop> props) {
-        this.props = props;
     }
 
     public int getCurEnemyCnt() {
@@ -383,16 +342,16 @@ public class MyPanel extends JPanel {
         return leftEnemy;
     }
 
+    public void setLeftEnemy(int leftEnemy) {
+        this.leftEnemy = leftEnemy;
+    }
+
     public long getLastCanAddEneTime() {
         return lastCanAddEneTime;
     }
 
     public void setLastCanAddEneTime(long lastCanAddEneTime) {
         this.lastCanAddEneTime = lastCanAddEneTime;
-    }
-
-    public void setLeftEnemy(int leftEnemy) {
-        this.leftEnemy = leftEnemy;
     }
 
     public int getScores() {
@@ -406,21 +365,4 @@ public class MyPanel extends JPanel {
     public Vector<Birth> getBirths() {
         return births;
     }
-
-    public void setBirths(Vector<Birth> births) {
-        this.births = births;
-    }
-
-    public GameFrame getGame() {
-        return game;
-    }
-
-    public void setGame(GameFrame game) {
-        this.game = game;
-    }
-
-    public static String[] getLevel() {
-        return level;
-    }
 }
-
