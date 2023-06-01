@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 public class MyPanel extends JPanel {
     private final Vector<Tank> tanks;
@@ -22,7 +23,7 @@ public class MyPanel extends JPanel {
     private int scores;
     private long lastCanAddEneTime;
 
-    public MyPanel(Game game, int level) {
+    public MyPanel(Game game, int level, boolean pattern) {
         this.game = game;
         this.setSize(Const.GAME_WIDTH + 200, Const.GAME_HEIGHT);
         tanks = new Vector<Tank>();
@@ -36,7 +37,12 @@ public class MyPanel extends JPanel {
         curEnemyCnt = 2;
         this.setScores(0);
         this.barriers = Barrier.readMap(curLevel);
-        tanks.add(new PlayerTank(Const.PLAYER, this, 17 * Const.WIDTH, 37 * Const.WIDTH));
+        // 一号玩家出生点
+        tanks.add(new PlayerTank(Const.PLAYER, this, Const.player1_x * Const.WIDTH, Const.player1_y * Const.WIDTH));
+        // 二号玩家出生点
+        if(pattern) {
+            tanks.add(new PlayerTank(Const.PLAYER, this, Const.player2_x * Const.WIDTH, Const.player2_y * Const.WIDTH));
+        }
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         this.leftEnemy = Const.Max_Enemy - this.getCurEnemyCnt();
@@ -60,8 +66,9 @@ public class MyPanel extends JPanel {
 
         // 面板添加监听
         this.addKeyListener(new KeyListener() {
-            boolean up = false, down = false, left = false, right = false, pause = false;
-            boolean fire = false;
+            boolean pause = false;
+            final PlayerTank player1 = (PlayerTank) tanks.get(0);
+            final PlayerTank player2 = (PlayerTank) tanks.get(0);
 
             @Override
             public void keyTyped(KeyEvent keyEvent) {
@@ -82,11 +89,19 @@ public class MyPanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent keyEvent) {
                 switch (keyEvent.getKeyCode()) {
-                    case KeyEvent.VK_UP -> up = true;
-                    case KeyEvent.VK_DOWN -> down = true;
-                    case KeyEvent.VK_RIGHT -> right = true;
-                    case KeyEvent.VK_LEFT -> left = true;
-                    case KeyEvent.VK_SPACE -> fire = true;
+                    // 一号玩家
+                    case KeyEvent.VK_W -> player1.setUp(true);
+                    case KeyEvent.VK_S -> player1.setDown(true);
+                    case KeyEvent.VK_D -> player1.setRight(true);
+                    case KeyEvent.VK_A -> player1.setLeft(true);
+                    case KeyEvent.VK_SPACE -> player1.setFire(true);
+
+                    // 二号玩家
+                    case KeyEvent.VK_UP -> player2.setUp(true);
+                    case KeyEvent.VK_DOWN -> player2.setDown(true);
+                    case KeyEvent.VK_RIGHT -> player2.setRight(true);
+                    case KeyEvent.VK_LEFT -> player2.setLeft(true);
+                    case KeyEvent.VK_ENTER -> player2.setFire(true);
                 }
                 setCurDir();
             }
@@ -94,34 +109,43 @@ public class MyPanel extends JPanel {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 switch (keyEvent.getKeyCode()) {
-                    case KeyEvent.VK_UP -> up = false;
-                    case KeyEvent.VK_DOWN -> down = false;
-                    case KeyEvent.VK_RIGHT -> right = false;
-                    case KeyEvent.VK_LEFT -> left = false;
-                    case KeyEvent.VK_SPACE -> fire = false;
+                    // 一号玩家
+                    case KeyEvent.VK_W -> player1.setUp(false);
+                    case KeyEvent.VK_S -> player1.setDown(false);
+                    case KeyEvent.VK_D -> player1.setRight(false);
+                    case KeyEvent.VK_A -> player1.setLeft(false);
+                    case KeyEvent.VK_SPACE -> player1.setFire(false);
+
+                    // 二号玩家
+                    case KeyEvent.VK_UP -> player2.setUp(false);
+                    case KeyEvent.VK_DOWN -> player2.setDown(false);
+                    case KeyEvent.VK_RIGHT -> player2.setRight(false);
+                    case KeyEvent.VK_LEFT -> player2.setLeft(false);
+                    case KeyEvent.VK_ENTER -> player2.setFire(false);
                 }
                 setCurDir();
             }
 
-            public void setCurDir() {
-                PlayerTank player = (PlayerTank) tanks.get(0);
-                if (!fire) {
-                    player.setFiring(false);
-                } else {
-                    player.setFiring(true);
-                }
-                if (!up && !down && !right && !left) {
+            public void moveAndFire(PlayerTank player){
+                player.setFiring(player.getFire());
+                if (!player.getUp() && !player.getDown() && !player.getRight() && !player.getLeft()) {
                     player.setMoving(false);
                 } else {
                     // 如果开火间隔达不到直接return
-                    if (up) player.setDir(Const.UP);
-                    if (down) player.setDir(Const.DOWN);
-                    if (right) player.setDir(Const.RIGHT);
-                    if (left) player.setDir(Const.LEFT);
+                    if (player.getUp()) player.setDir(Const.UP);
+                    if (player.getDown()) player.setDir(Const.DOWN);
+                    if (player.getRight()) player.setDir(Const.RIGHT);
+                    if (player.getLeft()) player.setDir(Const.LEFT);
                     player.setMoving(true);
                 }
             }
 
+            public void setCurDir() {
+                moveAndFire(player1);
+                if(pattern) {
+                    moveAndFire(player2);
+                }
+            }
         });
 
     }

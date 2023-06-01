@@ -57,6 +57,10 @@ public class Const {
     public final static int last_time = 20000;
 
     // 出生地
+    public final static int player1_x = 17;
+    public final static int player1_y = 37;
+    public final static int player2_x = 29;
+    public final static int player2_y = 37;
     public final static int Enemy_x1 = 0;
     public final static int Enemy_x2 = 47;
     public final static int Enemy_y = 0;

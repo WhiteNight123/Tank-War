@@ -4,6 +4,11 @@ public class PlayerTank extends Tank {
     private boolean isMoving;
     private boolean isFiring;
     private boolean isProtected;
+    private boolean up = false;
+    private boolean down = false;
+    private boolean left = false;
+    private boolean right = false;
+    private boolean fire = false;
 
     public PlayerTank(int tankType, MyPanel father, int x, int y) {
         super(tankType, father, x, y);
@@ -134,6 +139,46 @@ public class PlayerTank extends Tank {
 
     public void setProtected(boolean aProtected) {
         isProtected = aProtected;
+    }
+
+    public boolean getUp() {
+        return up;
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public boolean getDown() {
+        return down;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+
+    public boolean getLeft() {
+        return left;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public boolean getRight() {
+        return right;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean getFire() {
+        return fire;
+    }
+
+    public void setFire(boolean fire) {
+        this.fire = fire;
     }
 
     @Override
