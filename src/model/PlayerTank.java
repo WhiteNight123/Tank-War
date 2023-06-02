@@ -71,7 +71,10 @@ public class PlayerTank extends Tank {
         }
 
         // 如果和坦克碰撞
-        for (int i = 1; i < this.getMyPanel().getTanks().size(); i++) {
+        for (int i = 0; i < this.getMyPanel().getTanks().size(); i++) {
+            if (this.getMyPanel().getTanks().get(i) == this) {
+                continue;
+            }
             if (Utils.isCollide(newX, newY, Const.TANK_WIDTH, this.getMyPanel().getTanks().get(i).getX(), this.getMyPanel().getTanks().get(i).getY(), Const.TANK_WIDTH)) {
                 return false;
             }

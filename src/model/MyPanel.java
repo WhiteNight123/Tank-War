@@ -68,7 +68,7 @@ public class MyPanel extends JPanel {
         this.addKeyListener(new KeyListener() {
             boolean pause = false;
             final PlayerTank player1 = (PlayerTank) tanks.get(0);
-            final PlayerTank player2 = (PlayerTank) tanks.get(0);
+            final PlayerTank player2 = (PlayerTank) tanks.get(1);
 
             @Override
             public void keyTyped(KeyEvent keyEvent) {
