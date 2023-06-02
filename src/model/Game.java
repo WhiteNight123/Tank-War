@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Game extends JFrame {
     private int curLevel;
-
+    private boolean curPattern;
     public Game() {
         setTitle("Tank War");
         this.setSize(Const.GAME_WIDTH + 15 + 200, Const.GAME_HEIGHT + 38);
@@ -24,22 +24,15 @@ public class Game extends JFrame {
     public void welcome() {
         String bg = "src/res/drawable/game_welcome.png";
         JPanel wel = new Welcome(bg);
-        JButton beginGame = new JButton("开始游戏");
-        beginGame.setBounds(500, 460, 180, 60);
-        beginGame.setFont(new Font("微软雅黑", Font.PLAIN, 36));
-        beginGame.setFocusPainted(false);
-        beginGame.setForeground(Color.RED);
-        beginGame.setContentAreaFilled(false);
-        beginGame.addActionListener(actionEvent -> {
-            playGame();
-        });
-        wel.add(beginGame);
+
+        // wel.add(this.getSingleGameButton());
+        wel.add(this.getDoubleGameButton());
         wel.add(this.getExitGameButton(0));
         this.setPanel(wel);
     }
 
     public void playGame() {
-        this.setPanel(new MyPanel(this, this.curLevel));
+        this.setPanel(new MyPanel(this, this.curLevel, this.curPattern));
         this.getContentPane().requestFocus();
     }
 
@@ -76,6 +69,34 @@ public class Game extends JFrame {
         pass.add(this.getExitGameButton(60));
         pass.add(this.getBackMainButton());
         this.setPanel(pass);
+    }
+
+    public JButton getSingleGameButton(){
+        JButton singleGame = new JButton("单人游戏");
+        singleGame.setBounds(500, 460, 180, 60);
+        singleGame.setFont(new Font("微软雅黑", Font.PLAIN, 36));
+        singleGame.setFocusPainted(false);
+        singleGame.setForeground(Color.RED);
+        singleGame.setContentAreaFilled(false);
+        singleGame.addActionListener(actionEvent -> {
+            curPattern = false;
+            playGame();
+        });
+        return singleGame;
+    }
+
+    public JButton getDoubleGameButton(){
+        JButton doubleGame = new JButton("多人游戏");
+        doubleGame.setBounds(500, 460, 180, 60);
+        doubleGame.setFont(new Font("微软雅黑", Font.PLAIN, 36));
+        doubleGame.setFocusPainted(false);
+        doubleGame.setForeground(Color.RED);
+        doubleGame.setContentAreaFilled(false);
+        doubleGame.addActionListener(actionEvent -> {
+            curPattern = true;
+            playGame();
+        });
+        return doubleGame;
     }
 
     public JButton getExitGameButton(int distance) {

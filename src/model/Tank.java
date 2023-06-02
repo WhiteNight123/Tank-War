@@ -18,7 +18,7 @@ public class Tank implements AttackCallable {
     private long lastFireTime;
     private String[] img;
 
-    // 传入的是 敌人 、 玩家
+    // 传入的是 敌人、玩家
     public Tank(int tankType, MyPanel myPanel, int x, int y) {
         this.setX(x);
         this.setY(y);
@@ -92,6 +92,7 @@ public class Tank implements AttackCallable {
 //        System.out.println("添加炮弹成功, 横坐标："+this.getX()+"纵坐标："+this.getY()+",还有"+this.getFather().getBullets().size()+"颗炮弹");
     }
 
+    // 画血条
     public void draw(Graphics g1) {
         int width = 50;
         int y;
