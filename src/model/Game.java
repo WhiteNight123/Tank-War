@@ -5,13 +5,15 @@ import java.awt.*;
 
 public class Game extends JFrame {
     private int curLevel;
-    private boolean curPattern;
+    private boolean isDoubleGame;
+
     public Game() {
         setTitle("Tank War");
         this.setSize(Const.GAME_WIDTH + 15 + 200, Const.GAME_HEIGHT + 38);
         this.setLayout(null);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setIconImage(new ImageIcon("src/res/drawable/game_icon.png").getImage());
         curLevel = 1;
         setResizable(false);
     }
@@ -24,7 +26,6 @@ public class Game extends JFrame {
     public void welcome() {
         String bg = "src/res/drawable/game_welcome.png";
         JPanel wel = new Welcome(bg);
-
         // wel.add(this.getSingleGameButton());
         wel.add(this.getDoubleGameButton());
         wel.add(this.getExitGameButton(0));
@@ -32,7 +33,7 @@ public class Game extends JFrame {
     }
 
     public void playGame() {
-        this.setPanel(new MyPanel(this, this.curLevel, this.curPattern));
+        this.setPanel(new MyPanel(this, this.curLevel, this.isDoubleGame));
         this.getContentPane().requestFocus();
     }
 
@@ -71,7 +72,7 @@ public class Game extends JFrame {
         this.setPanel(pass);
     }
 
-    public JButton getSingleGameButton(){
+    public JButton getSingleGameButton() {
         JButton singleGame = new JButton("单人游戏");
         singleGame.setBounds(500, 460, 180, 60);
         singleGame.setFont(new Font("微软雅黑", Font.PLAIN, 36));
@@ -79,13 +80,13 @@ public class Game extends JFrame {
         singleGame.setForeground(Color.RED);
         singleGame.setContentAreaFilled(false);
         singleGame.addActionListener(actionEvent -> {
-            curPattern = false;
+            isDoubleGame = false;
             playGame();
         });
         return singleGame;
     }
 
-    public JButton getDoubleGameButton(){
+    public JButton getDoubleGameButton() {
         JButton doubleGame = new JButton("多人游戏");
         doubleGame.setBounds(500, 460, 180, 60);
         doubleGame.setFont(new Font("微软雅黑", Font.PLAIN, 36));
@@ -93,7 +94,7 @@ public class Game extends JFrame {
         doubleGame.setForeground(Color.RED);
         doubleGame.setContentAreaFilled(false);
         doubleGame.addActionListener(actionEvent -> {
-            curPattern = true;
+            isDoubleGame = true;
             playGame();
         });
         return doubleGame;

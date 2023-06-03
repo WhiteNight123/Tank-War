@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Explosion {
     private final int width;
-    private final String[] img = new String[]{"src/res/drawable/tank_explosion", "src/res/drawable/bullet_explosion"};
+    private final String[] img = new String[]{"src/res/drawable/explosion_tank", "src/res/drawable/explosion_bullet"};
     private final int total;
     private int x;
     private int y;
@@ -33,7 +33,7 @@ public class Explosion {
 
     public void draw(Graphics g) {
         long t = System.currentTimeMillis();
-        String path = this.getImg()[this.getType()] + this.getCurrent() + ".gif";
+        String path = this.getImg()[this.getType()] + this.getCurrent() + ".png";
         g.drawImage(Toolkit.getDefaultToolkit().getImage(path), this.getX(), this.getY(), this.getWidth(), this.getWidth(), this.getMyPanel());
         if (t - this.getLastExplosionTime() >= 200) {
             current++;
