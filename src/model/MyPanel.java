@@ -2,6 +2,7 @@ package model;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
@@ -21,72 +22,75 @@ public class MyPanel extends JPanel {
     private int leftEnemy;
     private int scores;
     private long lastCanAddEneTime;
+    boolean isPause;
 
-    public MyPanel(Game game, int level) {
+    public MyPanel(Game game, int level, boolean pattern) {
         this.game = game;
         this.setSize(Const.GAME_WIDTH + 200, Const.GAME_HEIGHT);
-        tanks = new Vector<Tank>();
-        bullets = new Vector<Bullet>();
-        explosions = new Vector<Explosion>();
-        props = new Vector<Prop>();
-        births = new Vector<Birth>();
+        tanks = new Vector<>();
+        bullets = new Vector<>();
+        explosions = new Vector<>();
+        props = new Vector<>();
+        births = new Vector<>();
         random = new Random();
 
         curLevel = level;
         curEnemyCnt = 2;
         this.setScores(0);
         this.barriers = Barrier.readMap(curLevel);
-        tanks.add(new PlayerTank(Const.PLAYER, this, 17 * Const.WIDTH, 37 * Const.WIDTH));
+        // 一号玩家出生点
+        tanks.add(new PlayerTank(Const.PLAYER, this, Const.player1_x * Const.WIDTH, Const.player1_y * Const.WIDTH));
+        // 二号玩家出生点
+        if (pattern) {
+            tanks.add(new PlayerTank(Const.PLAYER, this, Const.player2_x * Const.WIDTH, Const.player2_y * Const.WIDTH));
+        }
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         this.leftEnemy = Const.Max_Enemy - this.getCurEnemyCnt();
         this.setLastCanAddEneTime(System.currentTimeMillis());
-        Thread rePaintThread = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(30);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        Thread rePaintThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(25);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (!isPause) {
                     repaint();
                 }
-
             }
-        };
+        });
         rePaintThread.start();
         this.setDoubleBuffered(true);
 
         // 面板添加监听
         this.addKeyListener(new KeyListener() {
-            boolean up = false, down = false, left = false, right = false, pause = false;
-            boolean fire = false;
+            final PlayerTank player1 = (PlayerTank) tanks.get(0);
+            final PlayerTank player2 = (PlayerTank) tanks.get(1);
 
             @Override
             public void keyTyped(KeyEvent keyEvent) {
-                if (keyEvent.getKeyCode() == KeyEvent.VK_P) {
-                    pause = !pause;
-                    if (pause) {
-                        try {
-                            Thread.sleep(10000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Thread.currentThread().interrupt();
-                    }
-                }
             }
 
             @Override
             public void keyPressed(KeyEvent keyEvent) {
                 switch (keyEvent.getKeyCode()) {
-                    case KeyEvent.VK_UP -> up = true;
-                    case KeyEvent.VK_DOWN -> down = true;
-                    case KeyEvent.VK_RIGHT -> right = true;
-                    case KeyEvent.VK_LEFT -> left = true;
-                    case KeyEvent.VK_SPACE -> fire = true;
+                    // esc暂停
+                    case KeyEvent.VK_ESCAPE -> {
+                        pause();
+                    }
+                    // 一号玩家
+                    case KeyEvent.VK_W -> player1.setUp(true);
+                    case KeyEvent.VK_S -> player1.setDown(true);
+                    case KeyEvent.VK_D -> player1.setRight(true);
+                    case KeyEvent.VK_A -> player1.setLeft(true);
+                    case KeyEvent.VK_SPACE -> player1.setFire(true);
+                    // 二号玩家
+                    case KeyEvent.VK_UP -> player2.setUp(true);
+                    case KeyEvent.VK_DOWN -> player2.setDown(true);
+                    case KeyEvent.VK_RIGHT -> player2.setRight(true);
+                    case KeyEvent.VK_LEFT -> player2.setLeft(true);
+                    case KeyEvent.VK_ENTER -> player2.setFire(true);
                 }
                 setCurDir();
             }
@@ -94,36 +98,43 @@ public class MyPanel extends JPanel {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
                 switch (keyEvent.getKeyCode()) {
-                    case KeyEvent.VK_UP -> up = false;
-                    case KeyEvent.VK_DOWN -> down = false;
-                    case KeyEvent.VK_RIGHT -> right = false;
-                    case KeyEvent.VK_LEFT -> left = false;
-                    case KeyEvent.VK_SPACE -> fire = false;
+                    // 一号玩家
+                    case KeyEvent.VK_W -> player1.setUp(false);
+                    case KeyEvent.VK_S -> player1.setDown(false);
+                    case KeyEvent.VK_D -> player1.setRight(false);
+                    case KeyEvent.VK_A -> player1.setLeft(false);
+                    case KeyEvent.VK_SPACE -> player1.setFire(false);
+                    // 二号玩家
+                    case KeyEvent.VK_UP -> player2.setUp(false);
+                    case KeyEvent.VK_DOWN -> player2.setDown(false);
+                    case KeyEvent.VK_RIGHT -> player2.setRight(false);
+                    case KeyEvent.VK_LEFT -> player2.setLeft(false);
+                    case KeyEvent.VK_ENTER -> player2.setFire(false);
                 }
                 setCurDir();
             }
 
-            public void setCurDir() {
-                PlayerTank player = (PlayerTank) tanks.get(0);
-                if (!fire) {
-                    player.setFiring(false);
-                } else {
-                    player.setFiring(true);
-                }
-                if (!up && !down && !right && !left) {
+            public void moveAndFire(PlayerTank player) {
+                player.setFiring(player.getFire());
+                if (!player.getUp() && !player.getDown() && !player.getRight() && !player.getLeft()) {
                     player.setMoving(false);
                 } else {
                     // 如果开火间隔达不到直接return
-                    if (up) player.setDir(Const.UP);
-                    if (down) player.setDir(Const.DOWN);
-                    if (right) player.setDir(Const.RIGHT);
-                    if (left) player.setDir(Const.LEFT);
+                    if (player.getUp()) player.setDir(Const.UP);
+                    if (player.getDown()) player.setDir(Const.DOWN);
+                    if (player.getRight()) player.setDir(Const.RIGHT);
+                    if (player.getLeft()) player.setDir(Const.LEFT);
                     player.setMoving(true);
                 }
             }
 
+            public void setCurDir() {
+                moveAndFire(player1);
+                if (pattern) {
+                    moveAndFire(player2);
+                }
+            }
         });
-
     }
 
     @Override
@@ -300,6 +311,77 @@ public class MyPanel extends JPanel {
         if (this.random.nextInt(Const.P_prop) == 0) {
             this.getProps().add(new Prop(x, y, this.random.nextInt(4), this));
         }
+    }
+
+    private void pause() {
+        isPause = !isPause;
+        JDialog dialog = new JDialog(game, "", true);
+        dialog.setLayout(null);
+        dialog.setBounds(550, 440, 400, 190);
+        // 这个面板加载一张黑色的背景
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(new Color(43, 43, 43));
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setLayout(null);
+        panel.setBounds(0, 0, 400, 200);
+        // 坦克图标
+        JLabel focusIcon = new JLabel(new ImageIcon("src/res/drawable/game_select.png"));
+        focusIcon.setBounds(50, 41, 45, 45);
+        panel.add(focusIcon);
+
+        Font font = new Font("微软雅黑", Font.PLAIN, 34);
+        JButton continueGame = new JButton("继续游戏");
+        continueGame.setBounds(110, 40, 205, 45);
+        continueGame.setContentAreaFilled(false);
+        continueGame.setFocusPainted(false);
+        continueGame.setFont(font);
+        continueGame.setForeground(Color.RED);
+        continueGame.addActionListener(e -> {
+            System.out.println("继续游戏");
+            isPause = !isPause;
+            dialog.dispose();
+        });
+
+        JButton backMain = new JButton("返回主菜单");
+        backMain.setBounds(110, 110, 205, 45);
+        backMain.setFont(font);
+        backMain.setForeground(Color.RED);
+        backMain.setFocusPainted(false);
+        backMain.setContentAreaFilled(false);
+        backMain.addActionListener(e -> {
+            System.out.println("返回主菜单");
+            dialog.dispose();
+            game.welcome();
+        });
+        continueGame.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    backMain.requestFocus();
+                    focusIcon.setBounds(50, 111, 45, 40);
+                }
+            }
+        });
+        backMain.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    continueGame.requestFocus();
+                    focusIcon.setBounds(50, 41, 45, 40);
+                }
+            }
+        });
+        panel.add(continueGame);
+        panel.add(backMain);
+        dialog.add(panel);
+        dialog.setUndecorated(true);
+        dialog.setVisible(true);
+        dialog.setResizable(false);
     }
 
     public Vector<Barrier> getBarriers() {

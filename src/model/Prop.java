@@ -9,40 +9,40 @@ public class Prop {
     private int y;
     private boolean isAlive;
     private long time;
-    private MyPanel father;
+    private MyPanel myPanel;
     private long lastTime;
     private int cnt;
 
-    public Prop(int x, int y, int type, MyPanel father) {
+    public Prop(int x, int y, int type, MyPanel myPanel) {
         this.setX(x);
         this.setY(y);
         this.setType(type);
         this.setAlive(true);
         this.setTime(System.currentTimeMillis());
         this.setLastTime(System.currentTimeMillis());
-        this.setFather(father);
+        this.setMyPanel(myPanel);
         this.cnt = 0;
     }
 
-    public MyPanel getFather() {
-        return this.father;
+    public MyPanel getMyPanel() {
+        return this.myPanel;
     }
 
-    public void setFather(MyPanel father) {
-        this.father = father;
+    public void setMyPanel(MyPanel myPanel) {
+        this.myPanel = myPanel;
     }
 
     public void draw(Graphics g) {
         long t = System.currentTimeMillis();
         if (t - this.getTime() <= Const.prop_gap / 2) {
-            g.drawImage(Toolkit.getDefaultToolkit().getImage(img[this.getType()]), this.getX(), this.getY(), Const.propWidth, Const.propWidth, this.getFather());
+            g.drawImage(Toolkit.getDefaultToolkit().getImage(img[this.getType()]), this.getX(), this.getY(), Const.propWidth, Const.propWidth, this.getMyPanel());
         } else if (t - this.getTime() <= Const.prop_gap) {
             if (t - this.getLastTime() >= 500) {
                 this.cnt++;
                 this.setLastTime(t);
             }
             if (cnt % 2 == 0) {
-                g.drawImage(Toolkit.getDefaultToolkit().getImage(img[this.getType()]), this.getX(), this.getY(), Const.propWidth, Const.propWidth, this.getFather());
+                g.drawImage(Toolkit.getDefaultToolkit().getImage(img[this.getType()]), this.getX(), this.getY(), Const.propWidth, Const.propWidth, this.getMyPanel());
             }
         } else {
             this.setAlive(false);
