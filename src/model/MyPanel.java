@@ -16,6 +16,7 @@ public class MyPanel extends JPanel {
     private final Vector<Prop> props;
     private final Vector<Birth> births;
     private final int curLevel;
+    private final boolean isDoubleGame;
     private final Random random;
     private final Game game;
     private int curEnemyCnt;
@@ -35,8 +36,8 @@ public class MyPanel extends JPanel {
         props = new Vector<>();
         births = new Vector<>();
         random = new Random();
-
         curLevel = level;
+        this.isDoubleGame = isDoubleGame;
         curEnemyCnt = 2;
         this.setScores(0);
         this.barriers = Barrier.readMap(curLevel);
@@ -191,13 +192,22 @@ public class MyPanel extends JPanel {
             tanks.get(i).move();
             tanks.get(i).fire();
             if (!tanks.get(i).isAlive()) {
-                if (i == 0) {
-                    this.game.gameOver();
-                } else {
-                    this.setScores(this.getScores() + 100);
+                if(isDoubleGame){
+                    if(!tanks.get(0).isAlive() && !tanks.get(1).isAlive()){
+                        this.game.gameOver();
+                    } else if(i > 1){
+                        this.setScores(this.getScores() + 100);
+                        this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
+                    }
+                }else {
+                    if (i == 0) {
+                        this.game.gameOver();
+                    } else {
+                        this.setScores(this.getScores() + 100);
+                        this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
+                    }
                 }
                 tanks.remove(i);
-                this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
             } else {
                 tanks.get(i).draw(g);
             }
