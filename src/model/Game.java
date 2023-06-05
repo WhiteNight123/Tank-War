@@ -25,7 +25,7 @@ public class Game extends JFrame {
         String bg = "src/res/drawable/game_welcome.png";
         JPanel wel = new Welcome(bg);
 
-        // wel.add(this.getSingleGameButton());
+        wel.add(this.getSingleGameButton());
         wel.add(this.getDoubleGameButton());
         wel.add(this.getExitGameButton(0));
         this.setPanel(wel);
@@ -73,7 +73,7 @@ public class Game extends JFrame {
 
     public JButton getSingleGameButton(){
         JButton singleGame = new JButton("单人游戏");
-        singleGame.setBounds(500, 460, 180, 60);
+        singleGame.setBounds(500, 400, 180, 60);
         singleGame.setFont(new Font("微软雅黑", Font.PLAIN, 36));
         singleGame.setFocusPainted(false);
         singleGame.setForeground(Color.RED);
@@ -87,7 +87,7 @@ public class Game extends JFrame {
 
     public JButton getDoubleGameButton(){
         JButton doubleGame = new JButton("多人游戏");
-        doubleGame.setBounds(500, 460, 180, 60);
+        doubleGame.setBounds(500, 480, 180, 60);
         doubleGame.setFont(new Font("微软雅黑", Font.PLAIN, 36));
         doubleGame.setFocusPainted(false);
         doubleGame.setForeground(Color.RED);
