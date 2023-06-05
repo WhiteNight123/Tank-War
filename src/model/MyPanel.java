@@ -23,6 +23,8 @@ public class MyPanel extends JPanel {
     private int scores;
     private long lastCanAddEneTime;
     boolean isPause;
+    private final PlayerTank player1 ;
+    private  PlayerTank player2 ;
 
     public MyPanel(Game game, int level, boolean pattern) {
         this.game = game;
@@ -40,9 +42,11 @@ public class MyPanel extends JPanel {
         this.barriers = Barrier.readMap(curLevel);
         // 一号玩家出生点
         tanks.add(new PlayerTank(Const.PLAYER, this, Const.player1_x * Const.WIDTH, Const.player1_y * Const.WIDTH));
+        player1 = (PlayerTank) tanks.get(0);
         // 二号玩家出生点
         if (pattern) {
             tanks.add(new PlayerTank(Const.PLAYER, this, Const.player2_x * Const.WIDTH, Const.player2_y * Const.WIDTH));
+            player2 = (PlayerTank) tanks.get(1);
         }
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
@@ -65,34 +69,48 @@ public class MyPanel extends JPanel {
 
         // 面板添加监听
         this.addKeyListener(new KeyListener() {
-            final PlayerTank player1 = (PlayerTank) tanks.get(0);
-            final PlayerTank player2 = (PlayerTank) tanks.get(1);
-
             @Override
             public void keyTyped(KeyEvent keyEvent) {
             }
 
             @Override
             public void keyPressed(KeyEvent keyEvent) {
-                switch (keyEvent.getKeyCode()) {
-                    // esc暂停
-                    case KeyEvent.VK_ESCAPE -> {
-                        pause();
+                if (pattern) {
+                    switch (keyEvent.getKeyCode()) {
+                        // esc暂停
+                        case KeyEvent.VK_ESCAPE -> {
+                            pause();
+                        }
+                        // 一号玩家
+                        case KeyEvent.VK_W -> player1.setUp(true);
+                        case KeyEvent.VK_S -> player1.setDown(true);
+                        case KeyEvent.VK_D -> player1.setRight(true);
+                        case KeyEvent.VK_A -> player1.setLeft(true);
+                        case KeyEvent.VK_SPACE -> player1.setFire(true);
+
+                        // 二号玩家
+                        case KeyEvent.VK_UP -> player2.setUp(true);
+                        case KeyEvent.VK_DOWN -> player2.setDown(true);
+                        case KeyEvent.VK_RIGHT -> player2.setRight(true);
+                        case KeyEvent.VK_LEFT -> player2.setLeft(true);
+                        case KeyEvent.VK_ENTER -> player2.setFire(true);
                     }
-                    // 一号玩家
-                    case KeyEvent.VK_W -> player1.setUp(true);
-                    case KeyEvent.VK_S -> player1.setDown(true);
-                    case KeyEvent.VK_D -> player1.setRight(true);
-                    case KeyEvent.VK_A -> player1.setLeft(true);
-                    case KeyEvent.VK_SPACE -> player1.setFire(true);
-                    // 二号玩家
-                    case KeyEvent.VK_UP -> player2.setUp(true);
-                    case KeyEvent.VK_DOWN -> player2.setDown(true);
-                    case KeyEvent.VK_RIGHT -> player2.setRight(true);
-                    case KeyEvent.VK_LEFT -> player2.setLeft(true);
-                    case KeyEvent.VK_ENTER -> player2.setFire(true);
+                    setCurDir();
+                } else {
+                    switch (keyEvent.getKeyCode()) {
+                        // esc暂停
+                        case KeyEvent.VK_ESCAPE -> {
+                            pause();
+                        }
+                        // 一号玩家
+                        case KeyEvent.VK_W -> player1.setUp(true);
+                        case KeyEvent.VK_S -> player1.setDown(true);
+                        case KeyEvent.VK_D -> player1.setRight(true);
+                        case KeyEvent.VK_A -> player1.setLeft(true);
+                        case KeyEvent.VK_SPACE -> player1.setFire(true);
+                    }
+                    setCurDir();
                 }
-                setCurDir();
             }
 
             @Override
