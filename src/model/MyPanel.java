@@ -52,7 +52,7 @@ public class MyPanel extends JPanel {
             public void run() {
                 while (true) {
                     try {
-                        Thread.sleep(30);
+                        Thread.sleep(25);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
