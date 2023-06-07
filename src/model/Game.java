@@ -56,7 +56,6 @@ public class Game extends JFrame {
     public void passGame() {
         String bg = "src/res/drawable/game_win.png";
         JPanel pass = new Welcome(bg);
-
         pass.add(this.getNextLevel());
         pass.add(this.getExitGameButton(60));
         pass.add(this.getBackMainButton());
@@ -124,7 +123,10 @@ public class Game extends JFrame {
         backMain.setFocusPainted(false);
         backMain.setForeground(Color.RED);
         backMain.setContentAreaFilled(false);
-        backMain.addActionListener(actionEvent -> welcome());
+        backMain.addActionListener(actionEvent -> {
+            curLevel = 1;
+            welcome();
+        });
         return backMain;
     }
 

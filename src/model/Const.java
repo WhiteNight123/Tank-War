@@ -15,10 +15,9 @@ public class Const {
     public final static int LEFT = 4;
 
     // 坦克
-    public final static int TANK_NOR_SPEED = 6;
+    public final static int TANK_NOR_SPEED = 5;
     public final static int Tank_INC_SPEED = 10;
     public final static int Tank_DEC_SPEED = 3;
-
     public final static int MAX_HP = 100;
 
     // 追击
