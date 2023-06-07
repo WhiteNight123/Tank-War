@@ -14,12 +14,14 @@ public class MyPanel extends JPanel {
     private final Vector<Prop> props;
     private final Vector<Birth> births;
     private final int curLevel;
+    private final boolean isDoubleGame;
     private final Random random;
     private final Game game;
     private final PlayerTank player1;
     boolean isPause;
     private int curEnemyCnt;
     private int leftEnemy;
+    private int maxEnemy;
     private int scores;
     private long lastCanAddEneTime;
     private PlayerTank player2;
@@ -33,8 +35,9 @@ public class MyPanel extends JPanel {
         props = new Vector<>();
         births = new Vector<>();
         random = new Random();
-
         curLevel = level;
+        this.isDoubleGame = isDoubleGame;
+        maxEnemy = isDoubleGame ? 10 : 5;
         curEnemyCnt = 2;
         this.setScores(0);
         this.barriers = Barrier.readMap(curLevel);
@@ -48,7 +51,7 @@ public class MyPanel extends JPanel {
         }
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
-        this.leftEnemy = Const.Max_Enemy - this.getCurEnemyCnt();
+        this.leftEnemy = maxEnemy - this.getCurEnemyCnt();
         this.setLastCanAddEneTime(System.currentTimeMillis());
         Thread rePaintThread = new Thread(() -> {
             while (true) {
@@ -189,13 +192,22 @@ public class MyPanel extends JPanel {
             tanks.get(i).move();
             tanks.get(i).fire();
             if (!tanks.get(i).isAlive()) {
-                if (i == 0) {
-                    this.game.gameOver();
-                } else {
-                    this.setScores(this.getScores() + 100);
+                if(isDoubleGame){
+                    if(!tanks.get(0).isAlive() && !tanks.get(1).isAlive()){
+                        this.game.gameOver();
+                    } else if(i > 1){
+                        this.setScores(this.getScores() + 100);
+                        this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
+                    }
+                }else {
+                    if (i == 0) {
+                        this.game.gameOver();
+                    } else {
+                        this.setScores(this.getScores() + 100);
+                        this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
+                    }
                 }
                 tanks.remove(i);
-                this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
             } else {
                 tanks.get(i).draw(g);
             }
@@ -259,7 +271,7 @@ public class MyPanel extends JPanel {
         g.drawString(String.valueOf(this.getCurLevel()), Const.GAME_WIDTH + 88, 130);
         g.drawString(String.valueOf(this.getScores()), Const.GAME_WIDTH + 105, 260);
         g.drawString(String.valueOf(this.getLeftEnemy()), Const.GAME_WIDTH + 105, 335);
-        g.drawString(String.valueOf(Const.Max_Enemy - this.getLeftEnemy() - this.getCurEnemyCnt()), Const.GAME_WIDTH + 105, 405);
+        g.drawString(String.valueOf(maxEnemy - this.getLeftEnemy() - this.getCurEnemyCnt()), Const.GAME_WIDTH + 105, 405);
         this.addEnemyTank();
     }
 

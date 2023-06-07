@@ -18,7 +18,6 @@ public class Const {
     public final static int TANK_NOR_SPEED = 5;
     public final static int Tank_INC_SPEED = 10;
     public final static int Tank_DEC_SPEED = 3;
-
     public final static int MAX_HP = 100;
 
     // 追击
@@ -65,6 +64,5 @@ public class Const {
     public final static int Enemy_x2 = 47;
     public final static int Enemy_y = 0;
     public final static int Max_Cur_Enemy = 4;
-    public final static int Max_Enemy = 5;
     public final static int Add_Gap = 2000;
 }
