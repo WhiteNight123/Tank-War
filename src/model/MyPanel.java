@@ -21,6 +21,7 @@ public class MyPanel extends JPanel {
     private final Game game;
     private int curEnemyCnt;
     private int leftEnemy;
+    private int maxEnemy;
     private int scores;
     private long lastCanAddEneTime;
     boolean isPause;
@@ -38,6 +39,7 @@ public class MyPanel extends JPanel {
         random = new Random();
         curLevel = level;
         this.isDoubleGame = isDoubleGame;
+        maxEnemy = isDoubleGame ? 10 : 5;
         curEnemyCnt = 2;
         this.setScores(0);
         this.barriers = Barrier.readMap(curLevel);
@@ -51,7 +53,7 @@ public class MyPanel extends JPanel {
         }
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
-        this.leftEnemy = Const.Max_Enemy - this.getCurEnemyCnt();
+        this.leftEnemy = maxEnemy - this.getCurEnemyCnt();
         this.setLastCanAddEneTime(System.currentTimeMillis());
         Thread rePaintThread = new Thread(() -> {
             while (true) {
@@ -271,7 +273,7 @@ public class MyPanel extends JPanel {
         g.drawString(String.valueOf(this.getCurLevel()), Const.GAME_WIDTH + 88, 130);
         g.drawString(String.valueOf(this.getScores()), Const.GAME_WIDTH + 105, 260);
         g.drawString(String.valueOf(this.getLeftEnemy()), Const.GAME_WIDTH + 105, 335);
-        g.drawString(String.valueOf(Const.Max_Enemy - this.getLeftEnemy() - this.getCurEnemyCnt()), Const.GAME_WIDTH + 105, 405);
+        g.drawString(String.valueOf(maxEnemy - this.getLeftEnemy() - this.getCurEnemyCnt()), Const.GAME_WIDTH + 105, 405);
         this.addEnemyTank();
     }
 
