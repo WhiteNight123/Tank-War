@@ -2,9 +2,7 @@ package model;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.Random;
 import java.util.Vector;
 
@@ -18,13 +16,15 @@ public class MyPanel extends JPanel {
     private final int curLevel;
     private final Random random;
     private final Game game;
+    private final PlayerTank player1;
+    boolean isPause;
     private int curEnemyCnt;
     private int leftEnemy;
     private int scores;
     private long lastCanAddEneTime;
-    boolean isPause;
+    private PlayerTank player2;
 
-    public MyPanel(Game game, int level, boolean pattern) {
+    public MyPanel(Game game, int level, boolean isDoubleGame) {
         this.game = game;
         this.setSize(Const.GAME_WIDTH + 200, Const.GAME_HEIGHT);
         tanks = new Vector<>();
@@ -40,9 +40,11 @@ public class MyPanel extends JPanel {
         this.barriers = Barrier.readMap(curLevel);
         // 一号玩家出生点
         tanks.add(new PlayerTank(Const.PLAYER, this, Const.player1_x * Const.WIDTH, Const.player1_y * Const.WIDTH));
+        player1 = (PlayerTank) tanks.get(0);
         // 二号玩家出生点
-        if (pattern) {
+        if (isDoubleGame) {
             tanks.add(new PlayerTank(Const.PLAYER, this, Const.player2_x * Const.WIDTH, Const.player2_y * Const.WIDTH));
+            player2 = (PlayerTank) tanks.get(1);
         }
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
@@ -65,51 +67,75 @@ public class MyPanel extends JPanel {
 
         // 面板添加监听
         this.addKeyListener(new KeyListener() {
-            final PlayerTank player1 = (PlayerTank) tanks.get(0);
-            final PlayerTank player2 = (PlayerTank) tanks.get(1);
-
             @Override
             public void keyTyped(KeyEvent keyEvent) {
             }
 
             @Override
             public void keyPressed(KeyEvent keyEvent) {
-                switch (keyEvent.getKeyCode()) {
-                    // esc暂停
-                    case KeyEvent.VK_ESCAPE -> {
-                        pause();
+                if (isDoubleGame) {
+                    switch (keyEvent.getKeyCode()) {
+                        // esc暂停
+                        case KeyEvent.VK_ESCAPE -> {
+                            pause();
+                        }
+                        // 一号玩家
+                        case KeyEvent.VK_W -> player1.setUp(true);
+                        case KeyEvent.VK_S -> player1.setDown(true);
+                        case KeyEvent.VK_D -> player1.setRight(true);
+                        case KeyEvent.VK_A -> player1.setLeft(true);
+                        case KeyEvent.VK_SPACE -> player1.setFire(true);
+
+                        // 二号玩家
+                        case KeyEvent.VK_UP -> player2.setUp(true);
+                        case KeyEvent.VK_DOWN -> player2.setDown(true);
+                        case KeyEvent.VK_RIGHT -> player2.setRight(true);
+                        case KeyEvent.VK_LEFT -> player2.setLeft(true);
+                        case KeyEvent.VK_ENTER -> player2.setFire(true);
                     }
-                    // 一号玩家
-                    case KeyEvent.VK_W -> player1.setUp(true);
-                    case KeyEvent.VK_S -> player1.setDown(true);
-                    case KeyEvent.VK_D -> player1.setRight(true);
-                    case KeyEvent.VK_A -> player1.setLeft(true);
-                    case KeyEvent.VK_SPACE -> player1.setFire(true);
-                    // 二号玩家
-                    case KeyEvent.VK_UP -> player2.setUp(true);
-                    case KeyEvent.VK_DOWN -> player2.setDown(true);
-                    case KeyEvent.VK_RIGHT -> player2.setRight(true);
-                    case KeyEvent.VK_LEFT -> player2.setLeft(true);
-                    case KeyEvent.VK_ENTER -> player2.setFire(true);
+                } else {
+                    switch (keyEvent.getKeyCode()) {
+                        // esc暂停
+                        case KeyEvent.VK_ESCAPE -> {
+                            pause();
+                        }
+                        // 一号玩家
+                        case KeyEvent.VK_W -> player1.setUp(true);
+                        case KeyEvent.VK_S -> player1.setDown(true);
+                        case KeyEvent.VK_D -> player1.setRight(true);
+                        case KeyEvent.VK_A -> player1.setLeft(true);
+                        case KeyEvent.VK_SPACE -> player1.setFire(true);
+                    }
                 }
                 setCurDir();
             }
 
             @Override
             public void keyReleased(KeyEvent keyEvent) {
-                switch (keyEvent.getKeyCode()) {
-                    // 一号玩家
-                    case KeyEvent.VK_W -> player1.setUp(false);
-                    case KeyEvent.VK_S -> player1.setDown(false);
-                    case KeyEvent.VK_D -> player1.setRight(false);
-                    case KeyEvent.VK_A -> player1.setLeft(false);
-                    case KeyEvent.VK_SPACE -> player1.setFire(false);
-                    // 二号玩家
-                    case KeyEvent.VK_UP -> player2.setUp(false);
-                    case KeyEvent.VK_DOWN -> player2.setDown(false);
-                    case KeyEvent.VK_RIGHT -> player2.setRight(false);
-                    case KeyEvent.VK_LEFT -> player2.setLeft(false);
-                    case KeyEvent.VK_ENTER -> player2.setFire(false);
+                if (isDoubleGame) {
+                    switch (keyEvent.getKeyCode()) {
+                        // 一号玩家
+                        case KeyEvent.VK_W -> player1.setUp(false);
+                        case KeyEvent.VK_S -> player1.setDown(false);
+                        case KeyEvent.VK_D -> player1.setRight(false);
+                        case KeyEvent.VK_A -> player1.setLeft(false);
+                        case KeyEvent.VK_SPACE -> player1.setFire(false);
+                        // 二号玩家
+                        case KeyEvent.VK_UP -> player2.setUp(false);
+                        case KeyEvent.VK_DOWN -> player2.setDown(false);
+                        case KeyEvent.VK_RIGHT -> player2.setRight(false);
+                        case KeyEvent.VK_LEFT -> player2.setLeft(false);
+                        case KeyEvent.VK_ENTER -> player2.setFire(false);
+                    }
+                } else {
+                    switch (keyEvent.getKeyCode()) {
+                        // 一号玩家
+                        case KeyEvent.VK_W -> player1.setUp(false);
+                        case KeyEvent.VK_S -> player1.setDown(false);
+                        case KeyEvent.VK_D -> player1.setRight(false);
+                        case KeyEvent.VK_A -> player1.setLeft(false);
+                        case KeyEvent.VK_SPACE -> player1.setFire(false);
+                    }
                 }
                 setCurDir();
             }
@@ -130,7 +156,7 @@ public class MyPanel extends JPanel {
 
             public void setCurDir() {
                 moveAndFire(player1);
-                if (pattern) {
+                if (isDoubleGame) {
                     moveAndFire(player2);
                 }
             }
@@ -367,6 +393,12 @@ public class MyPanel extends JPanel {
                 }
             }
         });
+        continueGame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                focusIcon.setBounds(50, 41, 45, 40);
+            }
+        });
         backMain.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -374,6 +406,12 @@ public class MyPanel extends JPanel {
                     continueGame.requestFocus();
                     focusIcon.setBounds(50, 41, 45, 40);
                 }
+            }
+        });
+        backMain.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                focusIcon.setBounds(50, 111, 45, 40);
             }
         });
         panel.add(continueGame);
