@@ -192,26 +192,17 @@ public class MyPanel extends JPanel {
             tanks.get(i).move();
             tanks.get(i).fire();
             if (!tanks.get(i).isAlive()) {
-                if(isDoubleGame){
-                    if(!tanks.get(0).isAlive() && !tanks.get(1).isAlive()){
-                        this.game.gameOver();
-                    } else if(i > 1){
-                        this.setScores(this.getScores() + 100);
-                        this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
-                    }
-                }else {
-                    if (i == 0) {
-                        this.game.gameOver();
-                    } else {
-                        this.setScores(this.getScores() + 100);
-                        this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
-                    }
+                if(tanks.get(i).getTankType() == Const.ENEMY) {
+                    this.setScores(this.getScores() + 100);
+                    this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
                 }
                 tanks.remove(i);
             } else {
                 tanks.get(i).draw(g);
             }
-
+            if(tanks.get(0).getTankType() == Const.ENEMY){
+                this.game.gameOver();
+            }
             if (this.getTanks().get(0).isAlive() && this.getCurEnemyCnt() == 0 && this.getLeftEnemy() == 0) {
                 if (this.getCurLevel() < 2) {
                     this.game.passGame();
