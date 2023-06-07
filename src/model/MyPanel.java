@@ -2,9 +2,7 @@ package model;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.Random;
 import java.util.Vector;
 
@@ -395,6 +393,12 @@ public class MyPanel extends JPanel {
                 }
             }
         });
+        continueGame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                focusIcon.setBounds(50, 41, 45, 40);
+            }
+        });
         backMain.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -402,6 +406,12 @@ public class MyPanel extends JPanel {
                     continueGame.requestFocus();
                     focusIcon.setBounds(50, 41, 45, 40);
                 }
+            }
+        });
+        backMain.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                focusIcon.setBounds(50, 111, 45, 40);
             }
         });
         panel.add(continueGame);
