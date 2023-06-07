@@ -16,12 +16,12 @@ public class MyPanel extends JPanel {
     private final int curLevel;
     private final Random random;
     private final Game game;
+    private final PlayerTank player1;
+    boolean isPause;
     private int curEnemyCnt;
     private int leftEnemy;
     private int scores;
     private long lastCanAddEneTime;
-    boolean isPause;
-    private final PlayerTank player1;
     private PlayerTank player2;
 
     public MyPanel(Game game, int level, boolean isDoubleGame) {
