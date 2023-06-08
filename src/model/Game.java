@@ -8,8 +8,6 @@ public class Game extends JFrame {
     private int curLevel;
     private boolean isDoubleGame;
 
-
-
     private boolean isPause;
 
     public Game() {
@@ -70,13 +68,10 @@ public class Game extends JFrame {
         continueGame.setFocusPainted(false);
         continueGame.setFont(font);
         continueGame.setForeground(Color.RED);
-        continueGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("继续游戏");
-                isPause = !isPause;
-                dialog.dispose();
-            }
+        continueGame.addActionListener(e -> {
+            System.out.println("继续游戏");
+            isPause = !isPause;
+            dialog.dispose();
         });
 
         JButton backMain = new JButton("返回主菜单");
@@ -153,7 +148,7 @@ public class Game extends JFrame {
         this.setPanel(pass);
     }
 
-    public JButton getNextLevel(){
+    public JButton getNextLevel() {
         JButton nextLevel = new JButton("下一关");
         nextLevel.setBounds(516, 450, 150, 60);
         nextLevel.setFont(new Font("微软雅黑", Font.PLAIN, 36));
@@ -237,9 +232,5 @@ public class Game extends JFrame {
 
     public boolean isPause() {
         return isPause;
-    }
-
-    public void setPause(boolean pause) {
-        isPause = pause;
     }
 }

@@ -2,7 +2,8 @@ package model;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Vector;
 
@@ -14,13 +15,13 @@ public class MyPanel extends JPanel {
     private final Vector<Prop> props;
     private final Vector<Birth> births;
     private final int curLevel;
-    private final boolean isDoubleGame;
     private final Random random;
     private final Game game;
     private final PlayerTank player1;
+    private final int maxEnemy;
+    private final int randomBackground;
     private int curEnemyCnt;
     private int leftEnemy;
-    private int maxEnemy;
     private int scores;
     private long lastCanAddEneTime;
     private PlayerTank player2;
@@ -35,7 +36,6 @@ public class MyPanel extends JPanel {
         births = new Vector<>();
         random = new Random();
         curLevel = level;
-        this.isDoubleGame = isDoubleGame;
         maxEnemy = isDoubleGame ? 10 : 5;
         curEnemyCnt = 2;
         this.setScores(0);
@@ -51,6 +51,7 @@ public class MyPanel extends JPanel {
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         this.leftEnemy = maxEnemy - this.getCurEnemyCnt();
+        this.randomBackground = random.nextInt(3);
         this.setLastCanAddEneTime(System.currentTimeMillis());
         Thread rePaintThread = new Thread(() -> {
             while (true) {
@@ -170,7 +171,7 @@ public class MyPanel extends JPanel {
         super.paintComponent(g1);
         // 画背景
         Graphics2D g = (Graphics2D) g1;
-        g.drawImage(Toolkit.getDefaultToolkit().getImage("src/res/drawable/game_background.png"), 0, 0, Const.GAME_WIDTH, Const.GAME_HEIGHT, this);
+        g.drawImage(Toolkit.getDefaultToolkit().getImage("src/res/drawable/game_background" + randomBackground + ".png"), 0, 0, Const.GAME_WIDTH, Const.GAME_HEIGHT, this);
         g.drawImage(Toolkit.getDefaultToolkit().getImage("src/res/drawable/game_score_panel.png"), Const.GAME_WIDTH, 0, 200, Const.GAME_HEIGHT, this);
         g.setColor(Color.black);
         g.setStroke(new BasicStroke(3));
@@ -191,7 +192,7 @@ public class MyPanel extends JPanel {
             tanks.get(i).move();
             tanks.get(i).fire();
             if (!tanks.get(i).isAlive()) {
-                if(tanks.get(i).getTankType() == Const.ENEMY) {
+                if (tanks.get(i).getTankType() == Const.ENEMY) {
                     this.setScores(this.getScores() + 100);
                     this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
                 }
@@ -199,7 +200,7 @@ public class MyPanel extends JPanel {
             } else {
                 tanks.get(i).draw(g);
             }
-            if(tanks.get(0).getTankType() == Const.ENEMY){
+            if (tanks.get(0).getTankType() == Const.ENEMY) {
                 this.game.gameOver();
             }
             if (this.getTanks().get(0).isAlive() && this.getCurEnemyCnt() == 0 && this.getLeftEnemy() == 0) {
@@ -335,12 +336,12 @@ public class MyPanel extends JPanel {
         }
     }
 
+    // 添加buff
     public void addProp(int x, int y) {
         if (this.random.nextInt(Const.P_prop) == 0) {
             this.getProps().add(new Prop(x, y, this.random.nextInt(4), this));
         }
     }
-
 
 
     public Vector<Barrier> getBarriers() {
