@@ -17,7 +17,6 @@ public class MyPanel extends JPanel {
     private final Random random;
     private final Game game;
     private final PlayerTank player1;
-    boolean isPause;
     private int curEnemyCnt;
     private int leftEnemy;
     private int scores;
@@ -57,7 +56,7 @@ public class MyPanel extends JPanel {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (!isPause) {
+                if (!game.isPause()) {
                     repaint();
                 }
             }
@@ -77,7 +76,7 @@ public class MyPanel extends JPanel {
                     switch (keyEvent.getKeyCode()) {
                         // esc暂停
                         case KeyEvent.VK_ESCAPE -> {
-                            pause();
+                            game.pause();
                         }
                         // 一号玩家
                         case KeyEvent.VK_W -> player1.setUp(true);
@@ -97,7 +96,7 @@ public class MyPanel extends JPanel {
                     switch (keyEvent.getKeyCode()) {
                         // esc暂停
                         case KeyEvent.VK_ESCAPE -> {
-                            pause();
+                            game.pause();
                         }
                         // 一号玩家
                         case KeyEvent.VK_W -> player1.setUp(true);
@@ -339,88 +338,7 @@ public class MyPanel extends JPanel {
         }
     }
 
-    private void pause() {
-        isPause = !isPause;
-        JDialog dialog = new JDialog(game, "", true);
-        dialog.setLayout(null);
-        dialog.setBounds(550, 440, 400, 190);
-        // 这个面板加载一张黑色的背景
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(new Color(43, 43, 43));
-                g.fillRect(0, 0, getWidth(), getHeight());
-            }
-        };
-        panel.setLayout(null);
-        panel.setBounds(0, 0, 400, 200);
-        // 坦克图标
-        JLabel focusIcon = new JLabel(new ImageIcon("src/res/drawable/game_select.png"));
-        focusIcon.setBounds(50, 41, 45, 45);
-        panel.add(focusIcon);
 
-        Font font = new Font("微软雅黑", Font.PLAIN, 34);
-        JButton continueGame = new JButton("继续游戏");
-        continueGame.setBounds(110, 40, 205, 45);
-        continueGame.setContentAreaFilled(false);
-        continueGame.setFocusPainted(false);
-        continueGame.setFont(font);
-        continueGame.setForeground(Color.RED);
-        continueGame.addActionListener(e -> {
-            System.out.println("继续游戏");
-            isPause = !isPause;
-            dialog.dispose();
-        });
-
-        JButton backMain = new JButton("返回主菜单");
-        backMain.setBounds(110, 110, 205, 45);
-        backMain.setFont(font);
-        backMain.setForeground(Color.RED);
-        backMain.setFocusPainted(false);
-        backMain.setContentAreaFilled(false);
-        backMain.addActionListener(e -> {
-            System.out.println("返回主菜单");
-            dialog.dispose();
-            game.welcome();
-        });
-        continueGame.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    backMain.requestFocus();
-                    focusIcon.setBounds(50, 111, 45, 40);
-                }
-            }
-        });
-        continueGame.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                focusIcon.setBounds(50, 41, 45, 40);
-            }
-        });
-        backMain.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    continueGame.requestFocus();
-                    focusIcon.setBounds(50, 41, 45, 40);
-                }
-            }
-        });
-        backMain.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                focusIcon.setBounds(50, 111, 45, 40);
-            }
-        });
-        panel.add(continueGame);
-        panel.add(backMain);
-        dialog.add(panel);
-        dialog.setUndecorated(true);
-        dialog.setVisible(true);
-        dialog.setResizable(false);
-    }
 
     public Vector<Barrier> getBarriers() {
         return barriers;
