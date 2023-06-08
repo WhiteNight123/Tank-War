@@ -89,7 +89,6 @@ public class Tank implements AttackCallable {
         }
 
         this.getMyPanel().getBullets().add(new Bullet(x, y, this.getDir(), this.getBulletType(), this.getTankType(), this.getMyPanel()));
-//        System.out.println("添加炮弹成功, 横坐标："+this.getX()+"纵坐标："+this.getY()+",还有"+this.getFather().getBullets().size()+"颗炮弹");
     }
 
     // 画血条

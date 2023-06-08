@@ -236,7 +236,6 @@ public class EnemyTank extends Tank {
             Tank tank = this.getMyPanel().getTanks().get(i);
             if (this.getMyPanel().getTanks().get(i) != this) {
                 if (Utils.isCollide(newX, newY, Const.TANK_WIDTH, tank.getX(), tank.getY(), Const.TANK_WIDTH)) {
-                    //System.out.println("我的ID："+this.getId()+", "+"碰到了ID："+i);
                     return false;
                 }
             }
