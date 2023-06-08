@@ -17,7 +17,7 @@
 
 坦克大战的主要功能模块如图1所示：
 
-![image-20230608234106548](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234106548.png)
+![image-20230608234106548](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234106548.png)
 
 图1功能模块结构图
 
@@ -81,7 +81,7 @@
 
 图1 游戏主界面UI（陈锦东完成）
 
-![image-20230608234234651](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234234651.png)
+![image-20230608234234651](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234234651.png)
 
 （2）UI布局思想：
 
@@ -93,7 +93,7 @@
 
 图2 暂停界面UI（陈锦东完成）
 
-![image-20230608234245536](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234245536.png)
+![image-20230608234245536](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234245536.png)
 
 （2）UI布局思想：描述最外层的顶层布局、中间容器的布局，所需控件等
 
@@ -105,7 +105,7 @@
 
 图3 游戏界面UI（郭晓强完成）
 
-![image-20230608234254135](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234254135.png)
+![image-20230608234254135](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234254135.png)
 
 （2）UI布局思想：描述最外层的顶层布局、中间容器的布局，所需控件等
 
@@ -137,61 +137,61 @@
 
 图4 Game类图设计（陈锦东完成）
 
-![image-20230608234305364](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234305364.png)
+![image-20230608234305364](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234305364.png)
 
 图5 Welcome类图设计（陈锦东完成）
 
-![image-20230608234310748](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234310748.png)
+![image-20230608234310748](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234310748.png)
 
 图6 MyPanel类图设计（郭晓强完成）
 
-![image-20230608234317010](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234317010.png)
+![image-20230608234317010](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234317010.png)
 
 图7 Tank图设计（彭磊完成）
 
-![image-20230608234325921](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234325921.png)
+![image-20230608234325921](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234325921.png)
 
 图8 PlayerTank类图设计（彭磊完成）
 
-![image-20230608234332769](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234332769.png)
+![image-20230608234332769](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234332769.png)
 
 图9 EnemyTank类图设计（彭磊完成）
 
-![image-20230608234338709](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234338709.png)
+![image-20230608234338709](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234338709.png)
 
 图10 AttackCabbable接口图设计（郭晓强完成）
 
-![image-20230608234343547](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234343547.png)
+![image-20230608234343547](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234343547.png)
 
 图11 Barrier类图设计（郭晓强完成）
 
-![image-20230608234348538](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234348538.png)
+![image-20230608234348538](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234348538.png)
 
 图12 Birth类图设计（郭晓强完成）
 
-![image-20230608234353358](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234353358.png)
+![image-20230608234353358](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234353358.png)
 
 图13 Bullet类图设计（彭磊完成）
 
-![image-20230608234358855](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234358855.png)
+![image-20230608234358855](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234358855.png)
 
 图14 Explosion类图设计（彭磊完成）
 
-![image-20230608234405361](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234405361.png)
+![image-20230608234405361](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234405361.png)
 
 图15 Prop类图设计（陈锦东完成）
 
-![image-20230608234410809](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234410809.png)
+![image-20230608234410809](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234410809.png)
 
 图16 Utils类图设计（陈锦东完成）
 
-![image-20230608234416152](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234416152.png)
+![image-20230608234416152](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234416152.png)
 
 **3）全局类图**
 
 图17 系统全局类图设计（郭晓强完成）
 
-![image-20230608234423879](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234423879.png)
+![image-20230608234423879](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234423879.png)
 
 ## **项目时序图设计**
 
@@ -395,7 +395,7 @@ deactivate MyPanel
 
 图20 系统工程结构图
 
-![image-20230608234549027](https://github.com/CQUPT-Software-Shixun/Tank-War\assets\image-20230608234549027.png)
+![image-20230608234549027](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234549027.png)
 
 系统包结构如下表所示：
 
