@@ -21,10 +21,11 @@ public class MyPanel extends JPanel {
     boolean isPause;
     private int curEnemyCnt;
     private int leftEnemy;
-    private int maxEnemy;
+    private final int maxEnemy;
     private int scores;
     private long lastCanAddEneTime;
     private PlayerTank player2;
+    private final int randomBackground;
 
     public MyPanel(Game game, int level, boolean isDoubleGame) {
         this.game = game;
@@ -52,6 +53,7 @@ public class MyPanel extends JPanel {
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x1 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         tanks.add(new EnemyTank(Const.ENEMY, this, Const.Enemy_x2 * Const.WIDTH, Const.Enemy_y * Const.WIDTH));
         this.leftEnemy = maxEnemy - this.getCurEnemyCnt();
+        this.randomBackground = random.nextInt(3);
         this.setLastCanAddEneTime(System.currentTimeMillis());
         Thread rePaintThread = new Thread(() -> {
             while (true) {
@@ -88,7 +90,6 @@ public class MyPanel extends JPanel {
                         case KeyEvent.VK_D -> player1.setRight(true);
                         case KeyEvent.VK_A -> player1.setLeft(true);
                         case KeyEvent.VK_SPACE -> player1.setFire(true);
-
                         // 二号玩家
                         case KeyEvent.VK_UP -> player2.setUp(true);
                         case KeyEvent.VK_DOWN -> player2.setDown(true);
@@ -171,7 +172,7 @@ public class MyPanel extends JPanel {
         super.paintComponent(g1);
         // 画背景
         Graphics2D g = (Graphics2D) g1;
-        g.drawImage(Toolkit.getDefaultToolkit().getImage("src/res/drawable/game_background.png"), 0, 0, Const.GAME_WIDTH, Const.GAME_HEIGHT, this);
+        g.drawImage(Toolkit.getDefaultToolkit().getImage("src/res/drawable/game_background" + randomBackground + ".png"), 0, 0, Const.GAME_WIDTH, Const.GAME_HEIGHT, this);
         g.drawImage(Toolkit.getDefaultToolkit().getImage("src/res/drawable/game_score_panel.png"), Const.GAME_WIDTH, 0, 200, Const.GAME_HEIGHT, this);
         g.setColor(Color.black);
         g.setStroke(new BasicStroke(3));
@@ -192,14 +193,14 @@ public class MyPanel extends JPanel {
             tanks.get(i).move();
             tanks.get(i).fire();
             if (!tanks.get(i).isAlive()) {
-                if(isDoubleGame){
-                    if(!tanks.get(0).isAlive() && !tanks.get(1).isAlive()){
+                if (isDoubleGame) {
+                    if (!tanks.get(0).isAlive() && !tanks.get(1).isAlive()) {
                         this.game.gameOver();
-                    } else if(i > 1){
+                    } else if (i > 1) {
                         this.setScores(this.getScores() + 100);
                         this.setCurEnemyCnt(this.getCurEnemyCnt() - 1);
                     }
-                }else {
+                } else {
                     if (i == 0) {
                         this.game.gameOver();
                     } else {
