@@ -41,8 +41,6 @@ public class Barrier {
                                     barriers.add(new Barrier(Const.BRICK, j * Const.WIDTH, row * Const.WIDTH, Const.WIDTH));
                             case '4' ->
                                     barriers.add(new Barrier(Const.STEEL, j * Const.WIDTH, row * Const.WIDTH, Const.WIDTH));
-                            default -> {
-                            }
                         }
                     }
                 }
