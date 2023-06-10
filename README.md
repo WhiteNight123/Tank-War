@@ -197,194 +197,38 @@
 
 **1）坦克大战主界面时序图设计**
 
-图18 主界面时序图设计（陈锦东完成）
+图18 游戏时序图设计（郭晓强完成）
 
 ```mermaid
 sequenceDiagram
-actor User
-User ->> Game : main
-activate Game
-Game ->> Game : new
-activate Game
-Game -->> Game : #32; 
-deactivate Game
-Game ->> Game : welcome
-activate Game
-Game ->> Welcome : new
-activate Welcome
-Welcome -->> Game : #32; 
-deactivate Welcome
-Game ->> Game : getExitGameButton
-activate Game
-Game ->> Game : () ->;
-activate Game
-Game -->> Game : #32; 
-deactivate Game
-Game -->> Game : #32; 
-deactivate Game
-Game -->> Game : #32; 
-deactivate Game
-deactivate Game
-```
-
-**2）坦克大战游戏逻辑时序图设计**
-
-图19 游戏逻辑时序图设计（郭晓强完成）
-
-```mermaid
-sequenceDiagram
-actor User
-User ->> MyPanel : new
-activate MyPanel
-MyPanel ->> Barrier : readMap
-activate Barrier
-Barrier ->> Barrier : new
-activate Barrier
-Barrier -->> Barrier : #32; 
-deactivate Barrier
-Barrier ->> Barrier : new
-activate Barrier
-Barrier -->> Barrier : #32; 
-deactivate Barrier
-Barrier ->> Barrier : new
-activate Barrier
-Barrier -->> Barrier : #32; 
-deactivate Barrier
-Barrier ->> Barrier : new
-activate Barrier
-Barrier -->> Barrier : #32; 
-deactivate Barrier
-Barrier -->> MyPanel : #32; 
-deactivate Barrier
-MyPanel ->> PlayerTank : new
-activate PlayerTank
-PlayerTank ->> Tank : new
-activate Tank
-Tank -->> PlayerTank : #32; 
-deactivate Tank
-PlayerTank -->> MyPanel : #32; 
-deactivate PlayerTank
-MyPanel ->> PlayerTank : new
-activate PlayerTank
-PlayerTank ->> Tank : new
-activate Tank
-Tank -->> PlayerTank : #32; 
-deactivate Tank
-PlayerTank -->> MyPanel : #32; 
-deactivate PlayerTank
-MyPanel ->> EnemyTank : new
-activate EnemyTank
-EnemyTank ->> Tank : new
-activate Tank
-Tank -->> EnemyTank : #32; 
-deactivate Tank
-EnemyTank -->> MyPanel : #32; 
-deactivate EnemyTank
-MyPanel ->> EnemyTank : new
-activate EnemyTank
-EnemyTank ->> Tank : new
-activate Tank
-Tank -->> EnemyTank : #32; 
-deactivate Tank
-EnemyTank -->> MyPanel : #32; 
-deactivate EnemyTank
-MyPanel ->> MyPanel : () -&gt;
-activate MyPanel
-MyPanel -->> MyPanel : #32; 
-deactivate MyPanel
-MyPanel ->> Anonymous : keyTyped
-activate Anonymous
-Anonymous ->> Anonymous : keyPressed
-activate Anonymous
-Anonymous ->> MyPanel : pause
-activate MyPanel
-MyPanel ->> Anonymous : paintComponent
-activate Anonymous
-Anonymous ->> MyPanel : () -&gt;
-activate MyPanel
-MyPanel -->> Anonymous : #32; 
-deactivate MyPanel
-Anonymous ->> MyPanel : () -&gt;
-activate MyPanel
-MyPanel ->> Game : welcome
-activate Game
-Game -->> MyPanel : #32; 
-deactivate Game
-MyPanel -->> Anonymous : #32; 
-deactivate MyPanel
-Anonymous -->> MyPanel : #32; 
-deactivate Anonymous
-MyPanel -->> Anonymous : #32; 
-deactivate MyPanel
-Anonymous ->> MyPanel : pause
-activate MyPanel
-MyPanel ->> Anonymous : paintComponent
-activate Anonymous
-Anonymous ->> MyPanel : () -&gt;
-activate MyPanel
-MyPanel -->> Anonymous : #32; 
-deactivate MyPanel
-Anonymous ->> MyPanel : () -&gt;
-activate MyPanel
-MyPanel ->> Game : welcome
-activate Game
-Game -->> MyPanel : #32; 
-deactivate Game
-MyPanel -->> Anonymous : #32; 
-deactivate MyPanel
-Anonymous -->> MyPanel : #32; 
-deactivate Anonymous
-MyPanel -->> Anonymous : #32; 
-deactivate MyPanel
-Anonymous ->> Anonymous : setCurDir
-activate Anonymous
-Anonymous ->> Anonymous : moveAndFire
-activate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous ->> Anonymous : moveAndFire
-activate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous ->> Anonymous : keyReleased
-activate Anonymous
-Anonymous ->> Anonymous : setCurDir
-activate Anonymous
-Anonymous ->> Anonymous : moveAndFire
-activate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous ->> Anonymous : moveAndFire
-activate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous ->> Anonymous : moveAndFire
-activate Anonymous
-Anonymous ->> Anonymous : setCurDir
-activate Anonymous
-Anonymous ->> Anonymous : moveAndFire
-activate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous ->> Anonymous : moveAndFire
-activate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous -->> Anonymous : #32; 
-deactivate Anonymous
-Anonymous -->> MyPanel : #32; 
-deactivate Anonymous
-deactivate MyPanel
+    participant User as User
+    participant Game as Game
+    participant Welcome as Welcome
+    participant MyPanel as MyPanel
+    participant PlayerTank as PlayerTank
+    participant EnemyTank as EnemyTank
+    participant Barrier as Barrier
+    participant Bullet as Bullet
+    participant Explosion as Explosion
+    participant Prop as Prop
+    participant Utils as Utils
+    User->>Game: 启动游戏
+    Game->>Welcome: 显示欢迎界面
+    User->>Welcome: 选择开始游戏
+    Welcome->>Game: 请求开始游戏
+    Game->>MyPanel: 初始化游戏面板
+    MyPanel->>PlayerTank: 初始化玩家坦克
+    MyPanel->>EnemyTank: 初始化敌方坦克
+    MyPanel->>Barrier: 初始化障碍物
+    User->>PlayerTank: 控制玩家坦克
+    PlayerTank->>Bullet: 发射子弹
+    Bullet->>EnemyTank: 检查碰撞
+    EnemyTank->>Explosion: 触发爆炸
+    Explosion->>MyPanel: 显示爆炸
+    MyPanel->>Prop: 检查道具拾取
+    Prop->>PlayerTank: 应用道具效果
+    User->>Utils: 暂停/恢复游戏
+    Utils->>MyPanel: 暂停/恢复游戏状态
 ```
 
 ## **项目实现**
@@ -393,7 +237,7 @@ deactivate MyPanel
 
 系统工程结构如下图所示：
 
-图20 系统工程结构图
+图19 系统工程结构图
 
 ![image-20230608234549027](https://github.com/CQUPT-Software-Shixun/Tank-War/raw/main/assets/image-20230608234549027.png)
 
@@ -424,40 +268,40 @@ deactivate MyPanel
 
 （1）项目所需要的技术
 
-   **Git管理，Swing框架**
+   **Git管理，Swing框架，数据结构与算法**
 
 ## **项目运行结果**
 
 **1）欢迎界面模块实现**
 
-图21 欢迎界面实现截图
+图20 欢迎界面实现截图
 
 ![image-20230608234559262](https://s2.loli.net/2023/06/08/uzg4ePLF8lvOpJX.png)
 
 **2）游戏界面实现**
 
-图22 游戏界面1实现截图
+图21 游戏界面1实现截图
 
 ![image-20230608234605219](https://s2.loli.net/2023/06/08/c3lyBSzQ7MkEhnr.png)
 
-图23 游戏界面2实现截图
+图22 游戏界面2实现截图
 
 ![image-20230608234610949](https://s2.loli.net/2023/06/08/j3MpaGtkQUTdHEq.png)
 
 **3）暂停界面实现**
 
-图24 暂停界面实现截图
+图23 暂停界面实现截图
 
 ![image-20230608234616147](https://s2.loli.net/2023/06/08/yL8INYlDohmsTZi.png)
 
 **4）胜利界面实现**
 
-图25 胜利界面实现截图
+图24 胜利界面实现截图
 
 ![image-20230608234623626](https://s2.loli.net/2023/06/08/fvej5JM1urbWqGc.png)
 
 **4）失败界面实现**
 
-图26 失败界面实现截图
+图25 失败界面实现截图
 
 ![image-20230608234628221](https://s2.loli.net/2023/06/08/jlU9F2gezb3HxCS.png)
